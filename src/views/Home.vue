@@ -1,42 +1,51 @@
 <template>
-  <div class="home">Home</div>
-  <!-- การเติม ref จะหมายความว่าแล้วใส่ค่าตัวแปร paragraph ที่อยู่ข้างล่างจะลิ้งกับ p ตรงนี้ -->
-  <p>My name is {{ name }} and my age is {{ age }}</p>
-  <button @click="handleClick">Click me</button>
-  <button @click="age++">Add 1 to age</button>
-  <input type="text" v-model="name" />
+  <div class="home">
+    <h1>Home</h1>
+    <h2>Refs</h2>
+    <p>{{ ninjaOne.name }} - {{ ninjaOne.age }}</p>
+    <button @click="updateNinjaOne">Update Ninja One</button>
+    <h2>Reactive</h2>
+    <p>{{ ninjaTwo.name }} - {{ ninjaTwo.age }}</p>
+    <button @click="updateNinjaTwo">Update Ninja Two</button>
+  </div>
 </template>
 
 <script>
-import { ref } from "@vue/reactivity";
-// @ is an alias to /src
-
+import { ref, reactive } from "@vue/reactivity";
 export default {
   name: "Home",
-  // ไม่เหมือนกับ data เนื่องจาก data ถ้าข้อมูลถูกเปลี่ยนจะเปลี่ยนได้ แต่ setup จะไม่เปลี่ยนเลย
   setup() {
-    const name = ref("Taninchot");
-    const age = ref(20);
+    const ninjaOne = ref({ name: "Mario", age: 30 });
+    const ninjaTwo = reactive({ name: "Luigi", age: 35 });
 
-    // โดย ref จะ return ออกมาเป็น Object ของ ref ทำให้สามารถทำงานแบบ DOM ได้เลย
-    // การทำงานของมันคือจะออกไป return ก่อน เพราะอยู่ใน setup พอออกนอก return ปุ้บ ถึงจะลิ้งกัน
-    const paragraph = ref(null);
-    // เนื่องจากพอใช้ ref ครอบข้อมูลแล้วจะทำให้ข้อมูลนั้นเป็น reactive ก็คือสามารถเปลี่ยนแปลงได้
-    // ข้างล่างถ้าจะใช้ค่าที่ ref ต้องมี .value อยู่ด้วย เพราะ return มาเป็น ref แต่ข้างบนไม่ต้องใช้ .value เพราะเหมือนรู้ตัวเองอยู่แล้ว
-    const handleClick = () => {
-      name.value = "Art";
-      age.value = 30;
-      // console.log(paragraph, paragraph.value);
-      // เป็นเหมือนการเพิ่ม class ที่ชื่อว่า test ลงไปใน paragraph ที่ถูกref
-      // paragraph.value.classList.add("test");
-      // สามารถใช้ .innerHTML อะไรแบบนี้ได้
-      // paragraph.value.innerHTML ='Hello Ref'
+    // โดยถ้าให้เลือกใช้งาน reactive จะใช้งานง่านกว่าเพราะเราไม่จำเป็นต้อง .value  อะไรเลย
+    // ** ข้อสังเกต **
+    // ถ้าใช้ reactive จะใช้กับพวก primative type ไม่ได้ (คือ type ทุกอย่างที่ไม่ใช่ Object หรือ Array อ้างอิง : https://developer.mozilla.org/en-US/docs/Glossary/Primitive)
+    const nameOne = ref("mario");
+    // const nameTwo = reactive("Luigi");
+
+    // ถ้าเราใช้ ref จำเป็นต้องมี .value เพื่อเข้าถึงข้อมูลด้วย
+    const updateNinjaOne = () => {
+      ninjaOne.value.age = 40;
     };
 
-    return { name, age, handleClick, paragraph };
-  },
-  data() {
-    return {};
+    // ถ้าใช้ reactive ไม่จำเป็นต้องมี .value
+    const updateNinjaTwo = () => {
+      ninjaTwo.age = 45;
+      // nameTwo = reactive("Mario");
+    };
+
+    return {
+      ninjaOne,
+      updateNinjaOne,
+      ninjaTwo,
+      updateNinjaTwo,
+      nameOne
+      // nameTwo
+    };
   }
 };
 </script>
+
+<style>
+</style>
