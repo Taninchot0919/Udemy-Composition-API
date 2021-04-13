@@ -1,54 +1,27 @@
 <template>
   <div class="home">
-    <h1>Home</h1>
-    <input type="text" v-model="search" />
-    <p>search term - {{ search }}</p>
-    <div v-for="name in matchingNames" :key="name">{{ name }}</div>
-    <button @click="handleClick">Stop Watching</button>
+    <h1>home</h1>
+    <post-list :posts="posts"/>
   </div>
 </template>
 
 <script>
-import { computed, ref, watch, watchEffect } from "@vue/runtime-core";
+import { ref } from "vue";
+import PostList from "../components/PostList.vue";
+
 export default {
   name: "Home",
+  components: { PostList },
   setup() {
-    const search = ref("");
-    const names = ref([
-      "mario",
-      "yoshi",
-      "luigi",
-      "toad",
-      "bowser",
-      "koopa",
-      "peach"
+    const posts = ref([
+      { title: "welcome to the blog", body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur sequi natus ducimus accusamus, voluptas nam nemo, illo distinctio perspiciatis est facilis molestiae possimus doloremque incidunt! Assumenda tempore dolores ex fuga totam quidem neque itaque quam ducimus blanditiis voluptatibus aut numquam, aspernatur exercitationem possimus iure nostrum, non quos illum? Debitis ipsum delectus nam enim officia blanditiis eveniet, aspernatur magni beatae amet laborum assumenda autem nobis, ullam itaque a voluptate, temporibus incidunt maxime provident impedit similique laudantium. Rem adipisci, iusto deserunt repudiandae sint dolorem sunt tenetur id error possimus magni itaque. Aspernatur asperiores aut incidunt laboriosam possimus! Fugiat temporibus aspernatur asperiores facilis.', id: 1 },
+      { title: "top 5 css tips", body: "lorem ipsum", id: 2 }
     ]);
 
-    // เหมือนเป็นคำสั่งจับตาดู
-    // เช่น ทุกๆครั้งที่ search มีการเปลี่ยนแปลงให้มาทำ function ข้างใน
-    const stopWatch = watch(search, () => {
-      console.log("Watch Function run");
-    });
-
-    //** ถ้าอยากใช้ค่าข้างในใช้ watchEffect แต่ถ้าไม่อนากใช้ควรใช้ watch เฉยๆ **/
-
-    // ทำงานแบบจับตาดูเหมือนกันแต่เป็นการจับตาดูค่าข้างในด้วยว่ามีอะไร
-    const stopWatchEffect = watchEffect(() => {
-      console.log("watchEffect Function run", search.value);
-    });
-
-    const matchingNames = computed(() => {
-      // name ข้างใน filter จะหมายถึง name แต่ละตัว เหมือนๆกับ name in names
-      return names.value.filter(name => name.includes(search.value));
-    });
-
-    // สามารถหยุด watch และ watchEffect ได้โดยการเหมือนเรียกใช้ซ้ำ
-    const handleClick = ()=> {
-      stopWatch()
-      stopWatchEffect()
-    }
-
-    return { names, search, matchingNames, handleClick};
+    return { posts };
   }
 };
 </script>
+
+<style>
+</style>
