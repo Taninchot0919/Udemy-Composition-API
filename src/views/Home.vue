@@ -1,9 +1,11 @@
 <template>
   <div class="home">
-    <h1>home</h1>
-    <post-list v-if="showPosts" :posts="posts" />
-    <button @click="showPosts = !showPosts">toggle posts</button>
-    <button @click="posts.pop()">delete a post</button>
+    <h1>Home</h1>
+    <div v-if="error">{{ error }}</div>
+    <div v-if="posts.length">
+      <post-list :posts="posts" />
+    </div>
+    <div v-else>Loading ...</div>
   </div>
 </template>
 
@@ -15,19 +17,25 @@ export default {
   name: "Home",
   components: { PostList },
   setup() {
-    const posts = ref([
-      {
-        title: "welcome to the blog",
-        body:
-          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur sequi natus ducimus accusamus, voluptas nam nemo, illo distinctio perspiciatis est facilis molestiae possimus doloremque incidunt! Assumenda tempore dolores ex fuga totam quidem neque itaque quam ducimus blanditiis voluptatibus aut numquam, aspernatur exercitationem possimus iure nostrum, non quos illum? Debitis ipsum delectus nam enim officia blanditiis eveniet, aspernatur magni beatae amet laborum assumenda autem nobis, ullam itaque a voluptate, temporibus incidunt maxime provident impedit similique laudantium. Rem adipisci, iusto deserunt repudiandae sint dolorem sunt tenetur id error possimus magni itaque. Aspernatur asperiores aut incidunt laboriosam possimus! Fugiat temporibus aspernatur asperiores facilis.",
-        id: 1
-      },
-      { title: "top 5 css tips", body: "lorem ipsum", id: 2 }
-    ]);
+    const posts = ref([]);
+    const error = ref(null);
 
-    const showPosts = ref(true);
-
-    return { posts, showPosts };
+    const load = async () => {
+      try {
+        // await เป็นการรอจนกวาจะทำเสร็จถึงทำบรรทัดต่อๆไป
+        let data = await fetch("http://localhost:3000/posts");
+        if (!data.ok) {
+          throw Error("no data available");
+        }
+        posts.value = await data.json();
+      } catch (err) {
+        error.value = err.message;
+        console.log(err.message);
+        console.log(error.value);
+      }
+    };
+    load();
+    return { posts, error };
   }
 };
 </script>
