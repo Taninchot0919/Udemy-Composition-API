@@ -11,19 +11,20 @@
 
 <script>
 import PostList from "../components/PostList.vue";
-import GetPosts from "../composables/GetPosts";
+import getPosts from "../composables/getPosts";
 
 export default {
   name: "Home",
   components: { PostList },
   setup() {
     // ต้องทำ Destructuring เพื่อนำข้อมูลที่ได้จาก GetPosts มาใช้
-    const { posts, error, load } = GetPosts();
+    const { posts, error, load } = getPosts();
 
+    // เรียกใช้ load
     load();
 
     return { posts, error };
-  }
+  },
 };
 </script>
 
