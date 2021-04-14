@@ -5,17 +5,18 @@
     <div v-if="posts.length">
       <post-list :posts="posts" />
     </div>
-    <div v-else>Loading ...</div>
+    <div v-else><spinner /></div>
   </div>
 </template>
 
 <script>
 import PostList from "../components/PostList.vue";
 import getPosts from "../composables/getPosts";
+import Spinner from "../components/Spinner.vue";
 
 export default {
   name: "Home",
-  components: { PostList },
+  components: { PostList, Spinner },
   setup() {
     // ต้องทำ Destructuring เพื่อนำข้อมูลที่ได้จาก GetPosts มาใช้
     const { posts, error, load } = getPosts();
