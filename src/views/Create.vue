@@ -1,17 +1,12 @@
 <template>
   <div class="create">
-    <form>
+    <form @submit.prevent="handleSubmit">
       <label>Title : </label>
       <input v-model="title" type="text" required />
       <label>Content : </label>
       <textarea v-model="body" required></textarea>
       <label>Tags (Hit Enter to add tags)</label>
-      <input
-        type="text"
-        v-model="tag"
-        @keydown.enter.prevent="handleKeyDown"
-        required
-      />
+      <input type="text" v-model="tag" @keydown.enter.prevent="handleKeyDown" />
       <div v-for="tag in tags" :key="tag" class="pill">#{{ tag }}</div>
       <button>Add Post</button>
     </form>
@@ -37,7 +32,22 @@ export default {
       tag.value = "";
     };
 
-    return { title, body, tag, handleKeyDown, tags };
+    const handleSubmit = async () => {
+      console.log("handleSubmit Run");
+      let newPost = {
+        title: title.value,
+        body: body.value,
+        tags: tags.value,
+      };
+      const res = await fetch("http://localhost:3000/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newPost),
+      });
+      await console.log(res);
+    };
+
+    return { title, body, tag, handleKeyDown, tags, handleSubmit };
   },
 };
 </script>
